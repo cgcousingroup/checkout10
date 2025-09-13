@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checkout PIX R$14,90 - Cousin Pay</title>
+  <title>Checkout PIX R$9,90 - Cousin Pay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <style>
@@ -157,7 +157,7 @@
         <span class="text-sm">Estou ciente dessa compra</span>
       </label>
 
-      <button id="generateBtn" onclick="gerarPix()">GERAR PIX R$14,90</button>
+      <button id="generateBtn" onclick="gerarPix()">GERAR PIX R$9,90</button>
 
       <p id="footerNote" class="text-xs mt-6">Aviso: este sistema é responsável apenas pelo processamento do pagamento.</p>
     </div>
@@ -181,7 +181,7 @@
     const pixKey = "aa38c597-57c2-4bab-9d8f-6809ae3411cb";
     const name = "CR ENGENTECN LTDA";
     const city = "Sao Paulo";
-    const value = "15.00";
+    const value = "10.00";
 
     function gerarPix() {
       const checkbox = document.getElementById("acceptTerms");
