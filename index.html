@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout PIX R$14,90 - Cousin Pay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: linear-gradient(to right, #000000, #111111, #222222);
+      color: #e5e5e5;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+      color: white;
+      background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.7) 100%);
+    }
+    .qrcode img {
+      width: 180px !important;
+      height: 180px !important;
+    }
+    #generateBtn {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255 255 255 / 0.2);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      width: 100%;
+      transition: background-color 0.3s, transform 0.3s;
+      cursor: pointer;
+      user-select: none;
+    }
+    #generateBtn:hover {
+      background: rgba(255 255 255 / 0.15);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    #copyBtn {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255 255 255 / 0.2);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      width: 100%;
+      cursor: pointer;
+      border: none;
+      margin-top: 0.75rem;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #copyBtn:hover {
+      background: rgba(255 255 255 / 0.15);
+    }
+    a {
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(to right, white 50%, transparent 50%);
+      background-size: 200% 100%;
+      background-position: 0 100%;
+      transition: background-position 0.3s;
+    }
+    a:hover {
+      background-position: -100% 100%;
+      text-decoration: none;
+    }
+    label {
+      cursor: pointer;
+      color: white;
+    }
+    .text-sm {
+      font-size: 0.875rem;
+    }
+    .overflow-x-auto {
+      overflow-x: auto;
+    }
+    #pixCode {
+      background: #111;
+      color: #ccc;
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      word-break: break-all;
+      max-height: 5rem;
+      overflow-y: auto;
+      margin-top: 1rem;
+      user-select: all;
+    }
+    #footerNote {
+      color: #ccc;
+      margin-top: 1.5rem;
+    }
+
+    /* Popup Overlay */
+    #popupOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #popupContent {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 320px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    #popupContent p {
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    #popupCloseBtn {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255 255 255 / 0.2);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+    #popupCloseBtn:hover {
+      background: rgba(255 255 255 / 0.15);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+  <div class="glass" id="container">
+    <div id="initialContent">
+      <h1 class="text-3xl font-semibold mb-2">Checkout</h1>
+      <p class="font-medium mb-6" style="background: linear-gradient(to right, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Fornecido por <span class="font-bold">Cousin Pay</span></p>
+
+      <label class="flex items-center justify-center space-x-2 mb-4">
+        <input id="acceptTerms" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600" />
+        <span class="text-sm">Estou ciente dessa compra</span>
+      </label>
+
+      <button id="generateBtn" onclick="gerarPix()">GERAR PIX R$14,90</button>
+
+      <p id="footerNote" class="text-xs mt-6">Aviso: este sistema é responsável apenas pelo processamento do pagamento.</p>
+    </div>
+
+    <div id="qrcodeSection" class="hidden">
+      <div id="qrcode" class="qrcode flex justify-center mb-4"></div>
+      <div id="pixCode" class="overflow-x-auto"></div>
+      <button id="copyBtn" onclick="copyCode()">Copiar código PIX</button>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popupOverlay">
+    <div id="popupContent">
+      <p>Pix copiado! Por favor, envie o comprovante para <strong>@cgsuporte</strong> no Telegram.</p>
+      <button id="popupCloseBtn" onclick="closePopup()">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    const pixKey = "aa38c597-57c2-4bab-9d8f-6809ae3411cb";
+    const name = "CR ENGENTECN LTDA";
+    const city = "Sao Paulo";
+    const value = "15.00";
+
+    function gerarPix() {
+      const checkbox = document.getElementById("acceptTerms");
+      if (!checkbox.checked) {
+        alert("Você precisa confirmar ciência em compra.");
+        return;
+      }
+
+      const payload = gerarPayloadPix(pixKey, name, city, value);
+
+      // Atualiza texto e QRCode
+      const pixCodeElem = document.getElementById("pixCode");
+      pixCodeElem.innerText = payload;
+
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = ''; // limpa antes de gerar novo QR
+
+      const qr = qrcode(0, 'M');
+      qr.addData(payload);
+      qr.make();
+      qrContainer.innerHTML = qr.createImgTag(6);
+
+      // Esconde conteúdo inicial
+      document.getElementById("initialContent").classList.add("hidden");
+
+      // Mostra seção do PIX
+      document.getElementById("qrcodeSection").classList.remove("hidden");
+    }
+
+    function copyCode() {
+      const code = document.getElementById("pixCode").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showPopup();
+      }).catch(() => {
+        alert("Falha ao copiar o código.");
+      });
+    }
+
+    function showPopup() {
+      document.getElementById("popupOverlay").style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById("popupOverlay").style.display = "none";
+    }
+
+    function gerarPayloadPix(key, name, city, amount) {
+      function format(id, value) {
+        return id + value.length.toString().padStart(2, '0') + value;
+      }
+
+      const merchantAccount = format("00", "br.gov.bcb.pix") + format("01", key);
+      const merchantAccountField = format("26", merchantAccount);
+
+      const txid = "TX" + Date.now();
+
+      const payloadSemCRC = [
+        format("00", "01"),
+        merchantAccountField,
+        format("52", "0000"),
+        format("53", "986"),
+        format("54", amount),
+        format("58", "BR"),
+        format("59", name),
+        format("60", city),
+        format("62", format("05", format("01", txid))),
+        "6304"
+      ].join('');
+
+      const crc = crc16(payloadSemCRC).toUpperCase();
+      return payloadSemCRC + crc;
+    }
+
+    function crc16(str) {
+      let crc = 0xFFFF;
+      for (let c = 0; c < str.length; c++) {
+        crc ^= str.charCodeAt(c) << 8;
+        for (let i = 0; i < 8; i++) {
+          if ((crc & 0x8000) !== 0) crc = (crc << 1) ^ 0x1021;
+          else crc <<= 1;
+          crc &= 0xFFFF;
+        }
+      }
+      return crc.toString(16).padStart(4, '0');
+    }
+  </script>
+</body>
+</html>
